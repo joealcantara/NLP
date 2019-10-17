@@ -3,10 +3,13 @@ rm(list=ls())
 
 # Options
 options(scipen=999)
+getwd()
+
 
 # Libraries
 library(dplyr)
 library(ggplot2)
+library(mgcv)
 
 # Load Data
 dataBush = read.csv("~/Documents/NLP/Bush.csv")
@@ -147,11 +150,11 @@ rm(subsetTrump2)
 scatter_plot <- ggplot(dataReagan, aes(Days, ppron))
 scatter_plot + geom_point() + labs(x = "Days", y = "ppron") + geom_smooth(method="lm")
 
-#jpeg("~/Documents/NLP/plots/RRppron.jpg", width = 350, height = 350)
+jpeg("~/Documents/NLP/plots/RRppron.jpg", width = 350, height = 350)
 scatter_plot <- ggplot(dataReagan, aes(Days, ppron))
 scatter_plot + geom_point() + labs(x = "Days", y = "ppron") + geom_smooth(method="loess")
 cor.test(dataReagan$Days, dataReagan$ppron, method = "pearson", conf.level = 0.95)
-#dev.off()
+dev.off()
 
 scatter_plot <- ggplot(dataBush, aes(Days, ppron))
 scatter_plot + geom_point() + labs(x = "Days", y = "ppron") + geom_smooth(method="lm")
@@ -176,14 +179,15 @@ scatter_plot <- ggplot(dataBush, aes(Days, UniqueWords))
 scatter_plot + geom_point() + labs(x = "Days", y = "UniqueWords") + geom_smooth(method="loess")
 cor.test(dataBush$Days, dataBush$UniqueWords, method = "pearson", conf.level = 0.95)
 #dev.off()
-
+jpeg("~/Documents/NLP/plots/RRUniqueWordsNormalisedLM.jpg", width = 350, height = 350)
 scatter_plot <- ggplot(dataReagan, aes(Days, UniqueWordsNormalised))
 scatter_plot + geom_point() + labs(x = "Days", y = "UniqueWordsNormalised") + geom_smooth(method="lm")
-#jpeg("~/Documents/NLP/plots/RRUniqueWords.jpg", width = 350, height = 350)
+dev.off()
+jpeg("~/Documents/NLP/plots/RRUniqueWordsNormalisedLOESS.jpg", width = 350, height = 350)
 scatter_plot <- ggplot(dataReagan, aes(Days, UniqueWordsNormalised))
 scatter_plot + geom_point() + labs(x = "Days", y = "UniqueWordsNormalised") + geom_smooth(method="loess")
 cor.test(dataReagan$Days, dataReagan$UniqueWords, method = "pearson", conf.level = 0.95)
-#dev.off()
+dev.off()
 
 scatter_plot <- ggplot(dataBush, aes(Days, UniqueWordsNormalised))
 scatter_plot + geom_point() + labs(x = "Days", y = "UniqueWordsNormalised") + geom_smooth(method="lm")
@@ -210,4 +214,27 @@ scatter_plot <- ggplot(dataReagan, aes(Days, PronounsNormalised))
 scatter_plot + geom_point() + labs(x = "Days", y = "PronounsNormalised") + geom_smooth(method="loess")
 cor.test(dataReagan$Days, dataReagan$social, method = "pearson", conf.level = 0.95)
 
+# T-tests
+t.test(dataReagan$UniqueStems, dataBush$UniqueStems, alternative = "two.sided")
+t.test(dataReagan$UniqueStems, dataTrump$UniqueStems, alternative = "two.sided")
+t.test(dataBush$UniqueStems, dataTrump$UniqueStems, alternative = "two.sided")
 
+t.test(dataReagan$MLU, dataBush$MLU, alternative = "two.sided")
+t.test(dataReagan$MLU, dataTrump$MLU, alternative = "two.sided")
+t.test(dataBush$MLU, dataTrump$MLU, alternative = "two.sided")
+
+# Means and SD
+summary(dataReagan$MLU)
+sd(dataReagan$MLU)
+summary(dataBush$MLU)
+sd(dataBush$MLU)
+summary(dataTrump$MLU)
+sd(dataTrump$MLU)
+
+loessTest = loess(ppron ~ Days, data=dataReagan)
+res = loessTest$residuals
+sse = sum(res^2)
+
+gam_mod = gam(ppron ~ s(Days), data = dataReagan )
+coef(gam_mod)
+plot(gam_mod, residuals = TRUE, pch = 1)
