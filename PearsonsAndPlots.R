@@ -238,3 +238,17 @@ sse = sum(res^2)
 gam_mod = gam(ppron ~ s(Days), data = dataReagan )
 coef(gam_mod)
 plot(gam_mod, residuals = TRUE, pch = 1)
+
+model1 = glm(formula = dataReagan$ppron ~ dataReagan$Days, family = gaussian)
+summary(model1)
+plot(model1)
+
+model2 = glm(formula = dataReagan$ppron ~ dataReagan$Days,
+             family = Gamma(link = "identity"))
+summary(model2)
+plot(model2)
+
+model3 = glm(formula = dataReagan$ppron ~ dataReagan$Days,
+             family = Gamma(link = "log"))
+summary(model3)
+plot(model3)
