@@ -240,24 +240,15 @@ gamModel1 = gam(ppron ~ s(Days, bs="gp"), data = dataReagan, family = Gamma(link
 coef(gam_mod)
 plot(gam_mod, residuals = TRUE, pch = 1)
 
+res = gamModel1$residuals
+sse = sum(res^2)
+summary.gam(gamModel1)
 # Sum of squares as assessment of fit? If so, how to calculate?
 # Can I do glm with multiple predictors? How does this work?
 # Draw all two points approximately 2 years apart from the first 2 data points.
 # Taking this apart
 
-
-model1 = glm(formula = dataReagan$ppron ~ dataReagan$Days, family = gaussian)
-summary(model1)
-plot(model1)
-
-model2 = glm(formula = dataReagan$ppron ~ dataReagan$Days,
-             family = Gamma(link = "identity"))
-summary(model2)
-plot(model2)
-
-
-
-model3 = glm(formula = dataReagan$ppron ~ dataReagan$Days,
-             family = Gamma(link = "log"))
-summary(model3)
-plot(model3)
+fit = gamModel1$fitted.values
+gam.check(gamModel1, pch=19, cex=.3)
+plot.gam(gamModel1)
+vis.gam(gamModel1)
