@@ -150,11 +150,9 @@ rm(subsetTrump2)
 scatter_plot <- ggplot(dataReagan, aes(Days, ppron))
 scatter_plot + geom_point() + labs(x = "Days", y = "ppron") + geom_smooth(method="lm")
 
-jpeg("~/Documents/NLP/plots/RRppron.jpg", width = 350, height = 350)
 scatter_plot <- ggplot(dataReagan, aes(Days, ppron))
 scatter_plot + geom_point() + labs(x = "Days", y = "ppron") + geom_smooth(method="loess")
 cor.test(dataReagan$Days, dataReagan$ppron, method = "pearson", conf.level = 0.95)
-dev.off()
 
 scatter_plot <- ggplot(dataBush, aes(Days, ppron))
 scatter_plot + geom_point() + labs(x = "Days", y = "ppron") + geom_smooth(method="lm")

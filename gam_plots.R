@@ -35,13 +35,13 @@ ggplot(df, aes(x=Days, y=ppron)) +
   geom_point() + 
   geom_segment(aes(x = 0, y = 8.83, xend = df$Days, yend = df$ppron, colour = status), data = df) +
   ggtitle("Comparison 1")
-ggsave('comp1.jpg')
+ggsave('comp1.png')
 
 ggplot(df2, aes(x=Days, y=ppron)) + 
   geom_point() + 
   geom_segment(aes(x = 36, y = 9.44, xend = df2$Days, yend = df2$ppron, colour = status), data = df2) +
   ggtitle("Comparison 2")
-ggsave('comp2.jpg')
+ggsave('comp2.png')
 
 gamModel1 = gam(ppron ~ s(Days, bs="gp"), data = dataReagan, family = Gamma(link="log"), method="REML")
 coef(gamModel1)
