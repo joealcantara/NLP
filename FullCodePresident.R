@@ -15,9 +15,9 @@ library(mgcv)
 
 ###--- IMPORT AND PREPROCESS DATA ---###
 # Load Data
-dataBush = read.csv("~/Documents/NLP/Bush.csv")
-dataReagan = read.csv("~/Documents/NLP/Reagan.csv")
-dataTrump = read.csv("~/Documents/NLP/Trump.csv")
+dataBush = read.csv("~/NLP/Bush.csv")
+dataReagan = read.csv("~/NLP/Reagan.csv")
+dataTrump = read.csv("~/NLP/Trump.csv")
 
 # Clean Data 
 dataReagan = cleanData(dataReagan)
@@ -40,4 +40,8 @@ subsetBush = rbind(subsetBush, filter(dfBush, BY<0.05, hommel>0.05,  feature!='D
 # Then generate a vector of features 
 bushFeatures = subsetBush$feature
 reaganFeatures = subsetReagan$feature
+
+for (var in 1:length(bushFeatures)){
+  print(bushFeatures[var])
+}
 
