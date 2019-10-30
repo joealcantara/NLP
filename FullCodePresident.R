@@ -29,8 +29,15 @@ dfReagan = preprocess(dataReagan)
 dfBush = preprocess(dataBush)
 dfTrump = preprocess(dataTrump)
 
+# Generate a list of features we are interested in
+# First only look at the features which are significant
+subsetReagan = filter(dfReagan, hommel<0.05, BY<0.05, feature!='Days')
+subsetBush = filter(dfBush, hommel<0.05, BY<0.05, feature!='Days')
+subsetReagan = rbind(subsetReagan, filter(dfReagan, BY<0.05, hommel>0.05, feature!='Days'))
+subsetBush = rbind(subsetBush, filter(dfBush, BY<0.05, hommel>0.05,  feature!='Days'))
+# Note: Running this on Trump generates an empty set
 
-
-
-
+# Then generate a vector of features 
+bushFeatures = subsetBush$feature
+reaganFeatures = subsetReagan$feature
 
