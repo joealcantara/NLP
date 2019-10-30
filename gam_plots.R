@@ -65,48 +65,9 @@ library(qpcR)
 PRESS(gamModel1)
 
 
-## Plots
-# Reagan
-XReagan = dfReagan$pvalue
-YReagan = cbind(dfReagan$Bonferroni, dfReagan$BH, dfReagan$holm, dfReagan$hochberg,
-                dfReagan$hommel, dfReagan$BY)
-matplot(XReagan, YReagan, xlab = "Reagan Raw p-value", ylab = "Adjusted p-value", type = 'l', asp = 1,
-        col = 1:6, lty = 1, lwd = 2)
-legend('bottomright', legend = c('Bonferroni', 'BH', 'Holm', 'Hochberg', 'Hommel', 'BY'),
-       col = 1:6, cex = 1, pch = 16)
-abline(0, 1, col = 1, lty = 2, lwd = 1)
 
-# Bush
-XBush = dfBush$pvalue
-YBush = cbind(dfBush$Bonferroni, dfBush$BH, dfBush$holm, dfBush$hochberg,
-              dfBush$hommel, dfBush$BY)
-matplot(XBush, YBush, xlab = "Bush Raw p-value", ylab = "Adjusted p-value", type = 'l', asp = 1,
-        col = 1:6, lty = 1, lwd = 2)
-legend('bottomright', legend = c('Bonferroni', 'BH', 'Holm', 'Hochberg', 'Hommel', 'BY'),
-       col = 1:6, cex = 1, pch = 16)
-abline(0, 1, col = 1, lty = 2, lwd = 1)
 
-# Trump
-XTrump = dfTrump$pvalue
-YTrump = cbind(dfTrump$Bonferroni, dfTrump$BH, dfTrump$holm, dfTrump$hochberg,
-               dfTrump$hommel, dfTrump$BY)
-matplot(XTrump, YTrump, xlab = "Trump Raw p-value", ylab = "Adjusted p-value",
-        type = 'l', asp = 1,
-        col = 1:6, lty = 1, lwd = 2)
-legend('bottomright', legend = c('Bonferroni', 'BH', 'Holm', 'Hochberg', 'Hommel', 'BY'),
-       col = 1:6, cex = 1, pch = 16)
-abline(0, 1, col = 1, lty = 2, lwd = 1)
 
-subsetReagan = filter(dfReagan, hommel<0.05, BY<0.05, feature!='Days')
-subsetBush = filter(dfBush, hommel<0.05, BY<0.05, feature!='Days')
-subsetTrump = filter(dfTrump,  hommel<0.05, BY<0.05, feature!='Days')
-
-subsetReagan2 = filter(dfReagan, BY<0.05, hommel>0.05, feature!='Days')
-subsetBush2 = filter(dfBush, BY<0.05, hommel>0.05,  feature!='Days')
-subsetTrump2 = filter(dfTrump, BY<0.05, hommel>0.05, feature!='Days')
-
-rm(subsetTrump)
-rm(subsetTrump2)
 
 
 scatter_plot <- ggplot(dataReagan, aes(Days, ppron))
@@ -200,55 +161,11 @@ plot(gam_mod, residuals = TRUE, pch = 1)
 res = gamModel1$residuals
 sse = sum(res^2)
 summary.gam(gamModel1)
-# Sum of squares as assessment of fit? If so, how to calculate?
-# Can I do glm with multiple predictors? How does this work?
-# Draw all two points approximately 2 years apart from the first 2 data points.
-# Taking this apart
 
 fit = gamModel1$fitted.values
 gam.check(gamModel1, pch=19, cex=.3)
 plot.gam(gamModel1)
 vis.gam(gamModel1)
-
-# Prototype for PRESS Statistic
-# Clear Workspace
-rm(list=ls())
-
-# Options
-options(scipen=999)
-
-# Libraries
-library(dplyr)
-library(mgcv)
-
-# Load Data
-dfReagan = read.csv("~/Documents/NLP/Reagan.csv")
-df = dfReagan %>% dplyr::select(Days, ppron)
-
-results = numeric(nrow(df))
-for (i in 1:(nrow(df))){
-  gamModel = gam(ppron ~ s(Days, bs = "gp"), 
-                 data = df[-i, ], 
-                 family = Gamma(link = "log"), 
-                 method = "REML")
-  pred = predict.gam(gamModel, df[i, ], 
-                     type = "response")
-  results[i] = (as.numeric(pred) - df$ppron[i]) ^ 2
-}
-# PRESS
-sum(results)
-
-lmresults = numeric(nrow(df))
-for (i in 1:(nrow(df))){
-  linearModel = lm(ppron ~ Days, data = df[-i, ])
-  pred = predict.lm(linearModel, df[i, ], type = "response")
-  lmresults[i] = (as.numeric(pred) - df$ppron[i]) ^ 2
-}
-# PRESS
-sum(lmresults)
-
-
-
 
 # T-tests
 t.test(dataReagan$UniqueStems, dataBush$UniqueStems, alternative = "two.sided")
