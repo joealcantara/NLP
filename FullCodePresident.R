@@ -45,7 +45,7 @@ subsetBush = rbind(subsetBush, filter(dfBush, BY<0.05, hommel>0.05,  feature!='D
 bushFeatures = subsetBush$feature
 reaganFeatures = subsetReagan$feature
 
-###--- PLOTS ---###
+?###--- PLOTS ---###
 # Reagan
 XReagan = dfReagan$pvalue
 YReagan = cbind(dfReagan$Bonferroni, dfReagan$BH, dfReagan$holm, dfReagan$hochberg,
@@ -77,17 +77,28 @@ legend('bottomright', legend = c('Bonferroni', 'BH', 'Holm', 'Hochberg', 'Hommel
        col = 1:6, cex = 1, pch = 16)
 abline(0, 1, col = 1, lty = 2, lwd = 1)
 
+# Load Data
+df = read.csv("~/Documents/NLP/Reagan.csv")
+results = numeric(length(reaganFeatures))
 
-for (var in 1:length(bushFeatures)){
+for (var in 1:length(reaganFeatures)){
   print(bushFeatures[var])
+  tmp <- as.formula(paste0(reaganFeatures[var], ' ~ s(Days, bs = "gp")'))
+  for (i in 1:(nrow(df))){
+    gamModel = gam(tmp, 
+                   data = df[-i, ], 
+                   family = Gamma(link = "log"), 
+                   method = "REML")
+    pred = predict.gam(gamModel, df[i, ], 
+                       type = "response")
+    results[i] = (as.numeric(pred) - df$ppron[i]) ^ 2
+  }
 }
 
 
-# Load Data
-dfReagan = read.csv("~/Documents/NLP/Reagan.csv")
-df = dfReagan %>% dplyr::select(Days, ppron)
 
-results = numeric(nrow(df))
+
+
 for (i in 1:(nrow(df))){
   gamModel = gam(ppron ~ s(Days, bs = "gp"), 
                  data = df[-i, ], 
