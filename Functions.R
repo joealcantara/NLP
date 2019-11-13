@@ -6,6 +6,8 @@ removeBadFeatures = function(df){
   df$X = NULL
   df$index = NULL
   df$Julian = NULL
+  df$Filename = NULL
+  df$Date = NULL
   return(df)
 }
 

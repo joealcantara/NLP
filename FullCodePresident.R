@@ -17,12 +17,13 @@ library(dplyr)
 library(ggplot2)
 library(mgcv)
 library(stats)
+library(neuralnet)
 
 ###--- IMPORT AND PREPROCESS DATA ---###
 # Load Data
-dataBush = read.csv("~/NLP/Bush.csv")
-dataReagan = read.csv("~/NLP/Reagan.csv")
-dataTrump = read.csv("~/NLP/Trump.csv")
+dataBush = read.csv("Bush.csv")
+dataReagan = read.csv("Reagan.csv")
+dataTrump = read.csv("Trump.csv")
 
 # Clean Data 
 dataReagan = cleanData(dataReagan)
@@ -33,6 +34,11 @@ dataTrump = cleanData(dataTrump)
 dfReagan = preprocess(dataReagan)
 dfBush = preprocess(dataBush)
 dfTrump = preprocess(dataTrump)
+
+# Scale the Data
+sdfReagan = scale(dataReagan[,2:ncol(dataReagan)])
+sdfReagan = cbind(dataReagan[, 1], sdfReagan)
+colnames(sdfReagan)[colnames(sdfReagan) == ''] <- 'Days'
 
 # Generate a list of features we are interested in
 # First only look at the features which are significant
@@ -46,7 +52,7 @@ subsetBush = rbind(subsetBush, filter(dfBush, BY<0.05, hommel>0.05,  feature!='D
 bushFeatures = subsetBush$feature
 reaganFeatures = subsetReagan$feature
 
-?###--- PLOTS ---###
+###--- PLOTS ---###
 # Reagan
 XReagan = dfReagan$pvalue
 YReagan = cbind(dfReagan$Bonferroni, dfReagan$BH, dfReagan$holm, dfReagan$hochberg,
@@ -79,8 +85,7 @@ legend('bottomright', legend = c('Bonferroni', 'BH', 'Holm', 'Hochberg', 'Hommel
 abline(0, 1, col = 1, lty = 2, lwd = 1)
 
 # Load Data
-df = read.csv("~/NLP/Reagan.csv")
-results = numeric(length(df))
+results = numeric(length(dataReagan))
 totalResults = data.frame(feature = character (),
                           gamPRESS = numeric(),
                           lmPRESS = numeric())
@@ -101,30 +106,52 @@ totalResults = data.frame(feature = character (),
 #   totalResults[i] = sum(store)
 # }
 # PPRON Feature
-for (i in 1:(nrow(df))){
+for (i in 1:(nrow(dataReagan))){
   gamModel = gam(ppron ~ s(Days, bs = "gp"), 
-                 data = df[-i, ], 
+                 data = dataReagan[-i, ], 
                  family = Gamma(link = "log"), 
                  method = "REML")
-  pred = predict.gam(gamModel, df[i, ], 
+  pred = predict.gam(gamModel, dataReagan[i, ], 
                      type = "response")
-  results[i] = (as.numeric(pred) - df$ppron[i]) ^ 2
+  results[i] = (as.numeric(pred) - dataReagan$ppron[i]) ^ 2
 }
 # PRESS
 gamPress = sum(results)
 
-lmresults = numeric(nrow(df))
-for (i in 1:(nrow(df))){
-  linearModel = lm(ppron ~ Days, data = df[-i, ])
-  pred = predict.lm(linearModel, df[i, ], type = "response")
-  lmresults[i] = (as.numeric(pred) - df$ppron[i]) ^ 2
+lmresults = numeric(nrow(dataReagan))
+for (i in 1:(nrow(dataReagan))){
+  linearModel = lm(ppron ~ Days, data = dataReagan[-i, ])
+  pred = predict.lm(linearModel, dataReagan[i, ], type = "response")
+  lmresults[i] = (as.numeric(pred) - dataReagan$ppron[i]) ^ 2
 }
 # PRESS
 lmPress = sum(lmresults)
+sdfReagan = as.data.frame(sdfReagan)
+
+# nnresults = numeric(nrow(dataReagan))
+# for (i in 1:(nrow(sdfReagan))){
+#   train = sdfReagan[-i, ]
+#   test = sdfReagan[i,]
+#   nn = neuralnet(ppron ~ Days, data = train, hidden=c(2,2))
+#   pr.nn <- compute(nn, train)
+#   pr.nn_ <- pr.nn$net.result*(max(train$ppron)-min(train$ppron))+min(train$ppron)
+#   test.r <- (test$ppron)*(max(test$ppron)-min(test$ppron))+min(test$ppron)
+#   nnresults[i] = (test.r -pr.nn_)^2
+# }
+# nnPress = (sum(nnresults))
+
+# plot(nn)
+# pr.nn <- compute(nn, df[i, ])
+# pr.nn_ <- pr.nn$net.result*(max(testData$ppron)-min(testData$ppron))+min(testData$ppron)
+# test.r <- (predData$ppron)*(max(predData$ppron)-min(predData$ppron))+min(predData$ppron)
+# MSE.nn <- sum((test.r - pr.nn_)^2)/nrow(predData)
 
 vectortmp = data.frame("ppron",gamPress, lmPress)
 names(vectortmp) = c('feature','gamPRESS', 'lmPRESS')
 totalResults = rbind(totalResults, vectortmp)
+
+df = dataReagan
+
 
 ### Social Feature
 for (i in 1:(nrow(df))){
@@ -674,3 +701,22 @@ vectortmp = data.frame("Dic",gamPress, lmPress)
 names(vectortmp) = c('feature','gamPRESS', 'lmPRESS')
 totalResults = rbind(totalResults, vectortmp)
 
+test = totalResults
+
+test = test %>%
+  mutate_at(c(2,3), funs(c(scale(.))))
+
+ttest = t.test(totalResults[,2], totalResults[,3], paired = TRUE)
+indx <- totalResults[,2] < totalResults[,3]
+binom.test(sum(indx), length(indx))
+
+
+
+scatter_plot <- ggplot(dataReagan, aes(Days, ppron))
+scatter_plot + geom_point() + labs(x = "Days", y = "ppron") + geom_smooth(method="lm")
+scatter_plot + geom_point() + labs(x = "Days", y = "NN") + geom_smooth(method="loess", 
+                                                                       color = 'darkred')
+#jpeg("~/Documents/NLP/plots/GHWBUniqueWords.jpg", width = 350, height = 350)
+scatter_plot <- ggplot(dataReagan, aes(Days, ppron))
+scatter_plot + geom_point() + labs(x = "Days", y = "NN") + geom_smooth(method="loess")
+cor.test(dataReagan$Days, dataReagan$NN, method = "pearson", conf.level = 0.95)
