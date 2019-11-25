@@ -713,9 +713,7 @@ binom.test(sum(indx), length(indx))
 
 
 scatter_plot <- ggplot(dataReagan, aes(Days, ppron))
-scatter_plot + geom_point() + labs(x = "Days", y = "ppron") + geom_smooth(method="lm")
-scatter_plot + geom_point() + labs(x = "Days", y = "NN") + geom_smooth(method="loess", 
-                                                                       color = 'darkred')
+scatter_plot +  geom_point() + labs(x = "Days", y = "ppron") + geom_smooth(method="lm", color = "black", lty = 1) + geom_smooth(method="loess", color = "black", lty = 2) + theme_gray()
 #jpeg("~/Documents/NLP/plots/GHWBUniqueWords.jpg", width = 350, height = 350)
 scatter_plot <- ggplot(dataReagan, aes(Days, ppron))
 scatter_plot + geom_point() + labs(x = "Days", y = "NN") + geom_smooth(method="loess")
