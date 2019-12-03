@@ -489,7 +489,7 @@ for (i in 1:(nrow(df))){
 # PRESS
 lmPress = sum(lmresults)
 
-vectortmp = data.frame("Nouns",gamPress, lmPress)
+vectortmp = data.frame("Nouns/100",gamPress, lmPress)
 names(vectortmp) = c('feature','gamPRESS', 'lmPRESS')
 totalResults = rbind(totalResults, vectortmp)
 
@@ -710,11 +710,36 @@ ttest = t.test(totalResults[,2], totalResults[,3], paired = TRUE)
 indx <- totalResults[,2] < totalResults[,3]
 binom.test(sum(indx), length(indx))
 
-
+ttest
 
 scatter_plot <- ggplot(dataReagan, aes(Days, ppron))
 scatter_plot +  geom_point() + labs(x = "Days", y = "ppron") + geom_smooth(method="lm", color = "black", lty = 1) + geom_smooth(method="loess", color = "black", lty = 2) + theme_gray()
-#jpeg("~/Documents/NLP/plots/GHWBUniqueWords.jpg", width = 350, height = 350)
-scatter_plot <- ggplot(dataReagan, aes(Days, ppron))
-scatter_plot + geom_point() + labs(x = "Days", y = "NN") + geom_smooth(method="loess")
-cor.test(dataReagan$Days, dataReagan$NN, method = "pearson", conf.level = 0.95)
+
+# Linear models, comparison from first point to all points after 700 days
+df = dataReagan
+df2 = df
+df = filter(dataReagan, Days > 700 | Days < 1)
+df2 = filter(dataReagan, Days > 700 | Days < 37 & Days > 2)
+df = df %>% select(Days, ppron)
+df2 = df2 %>% select(Days, ppron)
+df$diff = df$ppron - 8.86
+df2$diff = df2$ppron - 9.44
+
+df$status = 'stable'
+df$status[df$diff > 0.10] = 'declining' 
+df$status[df$diff < -0.10] = 'improving'
+
+df2$status = 'stable'
+df2$status[df2$diff > 0.10] = 'declining' 
+df2$status[df2$diff < -0.10] = 'improving'
+
+ggplot(df, aes(x=Days, y=ppron)) + 
+  geom_point() + 
+  geom_segment(aes(x = 0, y = 8.83, xend = df$Days, yend = df$ppron, linetype = status), data = df)
+ggsave('comp1.png')
+
+ggplot(df2, aes(x=Days, y=ppron)) + 
+  geom_point() + 
+  geom_segment(aes(x = 36, y = 9.44, xend = df2$Days, yend = df2$ppron, linetype = status), data = df2)
+ggsave('comp2.png')
+
