@@ -714,6 +714,8 @@ ttest
 
 scatter_plot <- ggplot(dataReagan, aes(Days, ppron))
 scatter_plot +  geom_point() + labs(x = "Days", y = "ppron") + geom_smooth(method="lm", color = "black", lty = 1) + geom_smooth(method="loess", color = "black", lty = 2) + theme_gray()
+ggsave('comparison1.png')
+
 
 # Linear models, comparison from first point to all points after 700 days
 df = dataReagan
