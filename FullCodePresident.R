@@ -747,4 +747,71 @@ ggplot(df2, aes(x=Days, y=ppron)) +
   geom_segment(aes(x = 36, y = 9.44, xend = df2$Days, yend = df2$ppron, linetype = status), data = df2)
 ggsave('comp2.png')
 
-cor.test()
+# T-tests (Reagan v Bush)
+x = dataReagan$WordCount
+y = dataBush$WordCount
+t.test(x, y)
+
+x = dataReagan$UniqueStems
+y = dataBush$UniqueStems
+t.test(x, y)
+
+x = dataReagan$MLU
+y = dataBush$MLU
+t.test(x, y)
+
+x = dataReagan$NSNouns
+y = dataBush$NSNouns
+t.test(x, y)
+
+x = dataReagan$LIVerbs
+y = dataBush$LIVerbs
+t.test(x, y)
+
+# T-tests (Reagan v Trump)
+x = dataReagan$WordCount
+y = dataTrump$WordCount
+t.test(x, y)
+
+x = dataReagan$UniqueStems
+y = dataTrump$UniqueStems
+t.test(x, y)
+
+x = dataReagan$MLU
+y = dataTrump$MLU
+t.test(x, y)
+
+x = dataReagan$NSNouns
+y = dataTrump$NSNouns
+t.test(x, y)
+
+x = dataReagan$LIVerbs
+y = dataTrump$LIVerbs
+t.test(x, y)
+
+# T-tests (Bush v Trump)
+x = dataBush$WordCount
+y = dataTrump$WordCount
+t.test(x, y)
+
+x = dataBush$UniqueStems
+y = dataTrump$UniqueStems
+t.test(x, y)
+
+x = dataBush$MLU
+y = dataTrump$MLU
+t.test(x, y)
+
+x = dataBush$NSNouns
+y = dataTrump$NSNouns
+t.test(x, y)
+
+x = dataBush$LIVerbs
+y = dataTrump$LIVerbs
+t.test(x, y)
+
+# Fisher's R to Z transformation
+library(psych)
+dfReagan$r2z = fisherz(dfReagan$r2)
+dfBush$r2z = fisherz(dfBush$r2)
+dfTrump$r2z = fisherz(dfTrump$r2)
