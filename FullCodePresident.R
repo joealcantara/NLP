@@ -8,6 +8,9 @@
 # Clear Workspace
 rm(list=ls())
 
+# Options
+options(scipen=999)
+
 # Source File
 source("Functions.R")
 
@@ -36,6 +39,7 @@ dataTrump = cleanData(dataTrump)
 dfReagan = preprocess(dataReagan)
 dfBush = preprocess(dataBush)
 dfTrump = preprocess(dataTrump)
+dfBush = subset(dfBush, feature != 'SYM')
 
 # Scale the Data
 sdfReagan = scale(dataReagan[,2:ncol(dataReagan)])
@@ -815,3 +819,22 @@ library(psych)
 dfReagan$r2z = fisherz(dfReagan$r2)
 dfBush$r2z = fisherz(dfBush$r2)
 dfTrump$r2z = fisherz(dfTrump$r2)
+
+nBush = 132
+nReagan = 45
+nTrump = 29
+x = 1/(nReagan-3)
+y = 1/(nBush-3)
+
+dfBush = arrange(dfBush, feature)
+dfReagan = arrange(dfReagan, feature)
+dfTrump = arrange(dfTrump, feature)
+
+compareRRtoGHWB = sqrt(x + y)
+a = data.frame(dfReagan$r2)
+a[,2] = data.frame(dfBush$r2)
+a[,3] = data.frame(dfBush$feature)
+comp = data.frame(result=numeric())[1:200, ]
+i = NULL
+
+
