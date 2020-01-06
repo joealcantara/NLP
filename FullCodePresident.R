@@ -1,3 +1,5 @@
+# Library (cocor)
+
 # To do
 # FWER and FDR plots in function
 # Automate plots fot significant features
@@ -745,3 +747,4 @@ ggplot(df2, aes(x=Days, y=ppron)) +
   geom_segment(aes(x = 36, y = 9.44, xend = df2$Days, yend = df2$ppron, linetype = status), data = df2)
 ggsave('comp2.png')
 
+cor.test()

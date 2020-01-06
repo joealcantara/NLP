@@ -1,6 +1,9 @@
 # Clear Workspace
 rm(list=ls())
 
+# Load Libraries
+library(ggplot2)
+
 # Load Data
 PDJ <- read.csv("~/Documents/NLP/Authors/PDJ.csv")
 AC <- read.csv("~/Documents/NLP/Authors/AC.csv")
