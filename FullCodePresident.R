@@ -722,6 +722,9 @@ scatter_plot <- ggplot(dataReagan, aes(Days, ppron))
 scatter_plot +  geom_point() + labs(x = "Days", y = "ppron") + geom_smooth(method="lm", color = "black", lty = 1) + geom_smooth(method="loess", color = "black", lty = 2) + theme_gray()
 ggsave('comparison1.png')
 
+scatter_plot <- ggplot(dataReagan, aes(Days, NounsNormalised))
+scatter_plot +  geom_point() + labs(x = "Days", y = "NounsNormalised") + geom_smooth(method="lm", color = "black", lty = 1) + geom_smooth(method="loess", color = "black", lty = 2) + theme_gray()
+ggsave('comparison2.png')
 
 # Linear models, comparison from first point to all points after 700 days
 df = dataReagan
@@ -741,14 +744,21 @@ df2$status = 'stable'
 df2$status[df2$diff > 0.10] = 'declining' 
 df2$status[df2$diff < -0.10] = 'improving'
 
-ggplot(df, aes(x=Days, y=ppron)) + 
+cmp1 = ggplot(df, aes(x=Days, y=ppron)) + 
   geom_point() + 
-  geom_segment(aes(x = 0, y = 8.83, xend = df$Days, yend = df$ppron, linetype = status), data = df)
+  geom_segment(aes(x = 0, y = 8.83, xend = df$Days, yend = df$ppron, color = status), data = df)
+cmp1 + scale_color_brewer(palette = "Set1")
+cmp1 + scale_y_reverse()
+
+
 ggsave('comp1.png')
 
-ggplot(df2, aes(x=Days, y=ppron)) + 
+cmp2 = ggplot(df2, aes(x=Days, y=ppron)) + 
   geom_point() + 
-  geom_segment(aes(x = 36, y = 9.44, xend = df2$Days, yend = df2$ppron, linetype = status), data = df2)
+  geom_segment(aes(x = 36, y = 9.44, xend = df2$Days, yend = df2$ppron, color = status), data = df2)
+cmp2 + scale_color_brewer(palette = "Set1")
+cmp2 + scale_y_reverse()
+
 ggsave('comp2.png')
 
 # T-tests (Reagan v Bush)
@@ -837,4 +847,13 @@ a[,3] = data.frame(dfBush$feature)
 comp = data.frame(result=numeric())[1:200, ]
 i = NULL
 
+i = 2
+
+days = dataReagan$Days
+total = 0
+for (i in 1:length(days)-1) {
+  diff = days[i+1] - days[i]
+  total = total + diff
+  meandiff = total / length(days)
+}
 
