@@ -719,19 +719,23 @@ binom.test(sum(indx), length(indx))
 ttest
 
 scatter_plot <- ggplot(dataReagan, aes(Days, ppron))
-scatter_plot +  geom_point() + labs(x = "Days", y = "ppron") + geom_smooth(method="lm", color = "#CC0033", fill = '#CC0033', lty = 1) + geom_smooth(method="loess", color = "#3399FF", fill = '#3399FF' ,lty = 2) + theme_minimal()
+scatter_plot +  geom_point() + labs(x = "Days", y = "ppron") + geom_smooth(method="lm", color = "#CC0033", fill = '#CC0033', lty = 1) + geom_smooth(method="loess", color = "#3399FF", fill = '#3399FF' ,lty = 2) + theme_minimal() +
+  ggtitle('Reagan - Use of personal Pronouns over time') + theme(plot.title = element_text(lineheight=.8, face="bold", family="URWGothic"))
 ggsave('comparison1Reagan.png')
 
 scatter_plot <- ggplot(dataReagan, aes(Days, NounsNormalised))
-scatter_plot +  geom_point() + labs(x = "Days", y = "NounsNormalised") + geom_smooth(method="lm", color = "#CC0033", fill = '#CC0033', lty = 1) + geom_smooth(method="loess", color = "#3399FF", fill = '#3399FF', lty = 2) + theme_minimal()
+scatter_plot +  geom_point() + labs(x = "Days", y = "NounsNormalised") + geom_smooth(method="lm", color = "#CC0033", fill = '#CC0033', lty = 1) + geom_smooth(method="loess", color = "#3399FF", fill = '#3399FF', lty = 2) + theme_minimal() +
+  ggtitle('Reagan - Use of Nouns (Normalised) over time') + theme(plot.title = element_text(lineheight=.8, face="bold", family="URWGothic"))
 ggsave('comparison2Reagan.png')
 
 scatter_plot <- ggplot(dataBush, aes(Days, ppron))
-scatter_plot +  geom_point() + labs(x = "Days", y = "ppron") + geom_smooth(method="lm", color = "#CC0033", fill = '#CC0033', lty = 1) + geom_smooth(method="loess", color = "#3399FF", fill = '#3399FF', lty = 2) + theme_minimal()
+scatter_plot +  geom_point() + labs(x = "Days", y = "ppron") + geom_smooth(method="lm", color = "#CC0033", fill = '#CC0033', lty = 1) + geom_smooth(method="loess", color = "#3399FF", fill = '#3399FF', lty = 2) + theme_minimal() +
+  ggtitle('Bush - Use of personal Pronouns over time') + theme(plot.title = element_text(lineheight=.8, face="bold", family="URWGothic"))
 ggsave('comparison1Bush.png')
 
 scatter_plot <- ggplot(dataBush, aes(Days, NounsNormalised))
-scatter_plot +  geom_point() + labs(x = "Days", y = "NounsNormalised") + geom_smooth(method="lm", color = "#CC0033", fill = '#CC0033', lty = 1) + geom_smooth(method="loess", color = "#3399FF", fill = '#3399FF', lty = 2) + theme_minimal()
+scatter_plot +  geom_point() + labs(x = "Days", y = "NounsNormalised") + geom_smooth(method="lm", color = "#CC0033", fill = '#CC0033', lty = 1) + geom_smooth(method="loess", color = "#3399FF", fill = '#3399FF', lty = 2) + theme_minimal() +
+  ggtitle('Bush - Use of Nouns (Normalised) over time') + theme(plot.title = element_text(lineheight=.8, face="bold", family="URWGothic"))
 ggsave('comparison2Bush.png')
 
 # Linear models, comparison from first point to all points after 700 days
@@ -757,7 +761,7 @@ cmp1 = ggplot(df, aes(x=Days, y=ppron)) +
   geom_segment(aes(x = 0, y = 8.83, xend = df$Days, yend = df$ppron, color = status), data = df)
 cmp1 + scale_color_brewer(palette = "Set1")
 cmp1 + scale_y_reverse()
-
+cmp1 + ggtitle('Reagan - Personal Pronouns over time') + theme(plot.title = element_text(lineheight=.8, face="bold", family="URWGothic"))
 
 ggsave('comp1.png')
 
@@ -766,6 +770,8 @@ cmp2 = ggplot(df2, aes(x=Days, y=ppron)) +
   geom_segment(aes(x = 36, y = 9.44, xend = df2$Days, yend = df2$ppron, color = status), data = df2)
 cmp2 + scale_color_brewer(palette = "Set1")
 cmp2 + scale_y_reverse()
+cmp2 + 
+  ggtitle('Reagan - Personal Pronouns over time') + theme(plot.title = element_text(lineheight=.8, face="bold", family="URWGothic"))
 
 ggsave('comp2.png')
 
