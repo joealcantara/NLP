@@ -719,12 +719,20 @@ binom.test(sum(indx), length(indx))
 ttest
 
 scatter_plot <- ggplot(dataReagan, aes(Days, ppron))
-scatter_plot +  geom_point() + labs(x = "Days", y = "ppron") + geom_smooth(method="lm", color = "black", lty = 1) + geom_smooth(method="loess", color = "black", lty = 2) + theme_gray()
-ggsave('comparison1.png')
+scatter_plot +  geom_point() + labs(x = "Days", y = "ppron") + geom_smooth(method="lm", color = "#CC0033", fill = '#CC0033', lty = 1) + geom_smooth(method="loess", color = "#3399FF", fill = '#3399FF' ,lty = 2) + theme_minimal()
+ggsave('comparison1Reagan.png')
 
 scatter_plot <- ggplot(dataReagan, aes(Days, NounsNormalised))
-scatter_plot +  geom_point() + labs(x = "Days", y = "NounsNormalised") + geom_smooth(method="lm", color = "black", lty = 1) + geom_smooth(method="loess", color = "black", lty = 2) + theme_gray()
-ggsave('comparison2.png')
+scatter_plot +  geom_point() + labs(x = "Days", y = "NounsNormalised") + geom_smooth(method="lm", color = "#CC0033", fill = '#CC0033', lty = 1) + geom_smooth(method="loess", color = "#3399FF", fill = '#3399FF', lty = 2) + theme_minimal()
+ggsave('comparison2Reagan.png')
+
+scatter_plot <- ggplot(dataBush, aes(Days, ppron))
+scatter_plot +  geom_point() + labs(x = "Days", y = "ppron") + geom_smooth(method="lm", color = "#CC0033", fill = '#CC0033', lty = 1) + geom_smooth(method="loess", color = "#3399FF", fill = '#3399FF', lty = 2) + theme_minimal()
+ggsave('comparison1Bush.png')
+
+scatter_plot <- ggplot(dataBush, aes(Days, NounsNormalised))
+scatter_plot +  geom_point() + labs(x = "Days", y = "NounsNormalised") + geom_smooth(method="lm", color = "#CC0033", fill = '#CC0033', lty = 1) + geom_smooth(method="loess", color = "#3399FF", fill = '#3399FF', lty = 2) + theme_minimal()
+ggsave('comparison2Bush.png')
 
 # Linear models, comparison from first point to all points after 700 days
 df = dataReagan
