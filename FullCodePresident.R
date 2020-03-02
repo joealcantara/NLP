@@ -759,21 +759,24 @@ df2$status[df2$diff < -0.10] = 'improving'
 cmp1 = ggplot(df, aes(x=Days, y=ppron)) + 
   geom_point() + 
   geom_segment(aes(x = 0, y = 8.83, xend = df$Days, yend = df$ppron, color = status), data = df)
-cmp1 + scale_color_brewer(palette = "Set1")
-cmp1 + scale_y_reverse()
-cmp1 + ggtitle('Reagan - Personal Pronouns over time') + theme(plot.title = element_text(lineheight=.8, face="bold", family="URWGothic"))
+cmp1 = cmp1 + scale_color_brewer(palette = "Set1")
+cmp1 = cmp1 + scale_y_reverse()
+cmp1 = cmp1+ ggtitle('Reagan - Personal Pronouns over time') + theme(plot.title = element_text(lineheight=.8, face="bold", family="URWGothic"))
 
 ggsave('comp1.png')
 
 cmp2 = ggplot(df2, aes(x=Days, y=ppron)) + 
   geom_point() + 
   geom_segment(aes(x = 36, y = 9.44, xend = df2$Days, yend = df2$ppron, color = status), data = df2)
-cmp2 + scale_color_brewer(palette = "Set1")
-cmp2 + scale_y_reverse()
-cmp2 + 
+cmp2 = cmp2 + scale_color_brewer(palette = "Set1")
+cmp2 = cmp2 + scale_y_reverse()
+cmp2 = cmp2 + 
   ggtitle('Reagan - Personal Pronouns over time') + theme(plot.title = element_text(lineheight=.8, face="bold", family="URWGothic"))
 
 ggsave('comp2.png')
+
+cmp1
+cmp2
 
 # T-tests (Reagan v Bush)
 x = dataReagan$WordCount
