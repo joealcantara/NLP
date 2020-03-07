@@ -23,7 +23,9 @@ scatter_plot <- ggplot(AC, aes(Year.of.Publication , UniqueStems))
 scatter_plot +  geom_point() + labs(x = "Year", y = "UniqueStems") + geom_smooth(method="lm", color = "black", lty = 1) + geom_smooth(method="loess", color = "black", lty = 2) + theme_gray()
 
 scatter_plot <- ggplot(IM, aes(Year.of.Publication , UniqueStems))
-scatter_plot +  geom_point() + labs(x = "Year", y = "UniqueStems") + geom_smooth(method="lm", color = "black", lty = 1) + geom_smooth(method="loess", color = "black", lty = 2) + theme_gray()
+scatter_plot +  geom_point() + labs(x = "Year", y = "UniqueStems") + geom_smooth(method="lm", color = "#CC0033", fill = '#CC0033', lty = 1) + geom_smooth(method="loess", color = "#3399FF", fill = '#3399FF', lty = 2) + theme_minimal() +
+  ggtitle('Iris Murdoch - Use of unique words over time') + theme(plot.title = element_text(lineheight=.8, face="bold", family="URWGothic"))
+ggsave('authors.png')
 
 scatter_plot <- ggplot(PDJ, aes(Year.of.Publication , UniqueStems))
 scatter_plot +  geom_point() + labs(x = "Year", y = "UniqueStems") + geom_smooth(method="lm", color = "black", lty = 1) + geom_smooth(method="loess", color = "black", lty = 2) + theme_gray()
